@@ -1,6 +1,8 @@
 const request = require("supertest");
 const server = require("../index");
 
+
+// Pregunta 1
 describe("GET /cafes", () => {
     it('Should return status code 200', async ()=> {
         const response = await request(server).get('/cafes')
@@ -8,11 +10,23 @@ describe("GET /cafes", () => {
     })
     it("Data type is Array with min one object", async() => {
         const response = await request(server).get('/cafes')
-        expect(Array.isArray(response.body)).toBe(true) 
+        expect(Array.isArray(response.body)).toBe(true)
+        expect(response.body.length).toBeGreaterThan(0)
         //expect(response.body).toBeInstanceof(Array) <-- Tambien puede ser asi
     })
 });
 
+// Pregunta 2
+describe('DELETE /cafes', () => {
+  it('should return status code 404 when trying to delete a café with a non-existent id', async () => {
+    const response = await request(server)
+      .delete('/cafes/invalid-id')
+      .set('Authorization', 'test-token');
+    expect(response.status).toBe(404);
+  });
+});
+
+// Pregunta 3
 describe('POST /cafes', () => {
   it('should create a new café and respond with status code 201', async () => {
     const newCafe = {
@@ -26,15 +40,7 @@ describe('POST /cafes', () => {
   });
 });
 
-describe('DELETE /cafes', () => {
-  it('should return status code 404 when trying to delete a café with a non-existent id', async () => {
-    const response = await request(server)
-      .delete('/cafes/invalid-id')
-      .set('Authorization', 'test-token');
-    expect(response.status).toBe(404);
-  });
-});
-
+// Pregunta 4
 describe('PUT /cafes/:id', () => {
   it('should return status code 400 when the id in params does not match the id in the body', async () =>{
     const coffe = {    
